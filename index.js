@@ -14,7 +14,8 @@ app.use(express.json());
 // };
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+    const { name = "World" } = req.query;
+  res.send(`Hello ${name}!`);
 });
 
 app.get("/user", async (req, res) => {

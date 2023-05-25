@@ -11,14 +11,14 @@ app.get("/", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
-  const { prisma } = require("./parisma");
+  const { prisma } = require("./prismaClient");
 
   const allUsers = await prisma.user.findMany();
   res.json(allUsers);
 });
 
 app.post("/user", async (req, res) => {
-  const { prisma } = require("./parisma");
+  const { prisma } = require("./prismaClient");
   const { name, email } = req.body;
   console.log(name, email);
   const newUser = await prisma.user.create({
@@ -28,7 +28,7 @@ app.post("/user", async (req, res) => {
 });
 
 app.get("/tasks/:userId", async (req, res) => {
-    const { prisma } = require("./parisma");
+    const { prisma } = require("./prismaClient");
     const { userId } = req.params;
     const tasks = await prisma.task.findMany({
         where: {
@@ -39,7 +39,7 @@ app.get("/tasks/:userId", async (req, res) => {
 })
 
 app.post("/task", async (req, res) => {
-    const { prisma } = require("./parisma");
+    const { prisma } = require("./prismaClient");
     const { title, authorId } = req.body;
     try{
         const newTask = await prisma.task.create({
@@ -56,7 +56,7 @@ app.post("/task", async (req, res) => {
 })
 
 app.get("/task/:taskId", async (req, res) => {
-    const { prisma } = require("./parisma");
+    const { prisma } = require("./prismaClient");
     const { taskId } = req.params;
     const task = await prisma.task.findUnique({
         where: {
@@ -67,7 +67,7 @@ app.get("/task/:taskId", async (req, res) => {
 })
 
 app.get("/tasks", async (req, res) => {
-    const { prisma } = require("./parisma");
+    const { prisma } = require("./prismaClient");
     // console.log("getting tasks")
     // const time = new Date().getTime()
     const tasks = await prisma.task.findMany({ take: 10 })

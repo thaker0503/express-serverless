@@ -68,7 +68,11 @@ app.get("/task/:taskId", async (req, res) => {
 
 app.get("/tasks", async (req, res) => {
     const { prisma } = require("./parisma");
-    const tasks = await prisma.task.findMany()
+    const tasks = await prisma.task.findMany({
+        include: {
+            author: true
+        }
+    })
     res.json(tasks)
 })
 

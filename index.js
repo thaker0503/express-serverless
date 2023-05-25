@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    const { name = "World" } = req.query;
+  const { name = "World" } = req.query;
   res.send(`Hello ${name}!`);
 });
 
@@ -28,56 +28,58 @@ app.post("/user", async (req, res) => {
 });
 
 app.get("/tasks/:userId", async (req, res) => {
-    const { prisma } = require("./prismaClient");
-    const { userId } = req.params;
-    const tasks = await prisma.task.findMany({
-        where: {
-            authorId: userId
-        }
-    })
-    res.json(tasks)
-})
+  const { prisma } = require("./prismaClient");
+  const { userId } = req.params;
+  const tasks = await prisma.task.findMany({
+    where: {
+      authorId: userId,
+    },
+  });
+  res.json(tasks);
+});
 
 app.post("/task", async (req, res) => {
-    const { prisma } = require("./prismaClient");
-    const { title, authorId } = req.body;
-    try{
-        const newTask = await prisma.task.create({
-            data: {
-                title,
-                authorId
-            }
-        })
-        res.status(200).json(newTask)
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({error: err})
-    }
-})
+  const { prisma } = require("./prismaClient");
+  const { title, authorId } = req.body;
+  try {
+    const newTask = await prisma.task.create({
+      data: {
+        title,
+        authorId,
+      },
+    });
+    res.status(200).json(newTask);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err });
+  }
+});
 
 app.get("/task/:taskId", async (req, res) => {
-    const { prisma } = require("./prismaClient");
-    const { taskId } = req.params;
-    const task = await prisma.task.findUnique({
-        where: {
-            id: taskId
-        }
-    })
-    res.json(task)
-})
+  const { prisma } = require("./prismaClient");
+  const { taskId } = req.params;
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+  });
+  res.json(task);
+});
 
 app.get("/tasks", async (req, res) => {
-    const { prisma } = require("./prismaClient");
-    // console.log("getting tasks")
-    // const time = new Date().getTime()
-    const tasks = await prisma.task.findMany({ take: 10 })
-    // console.log("time taken: ", new Date().getTime() - time)
-    res.json(tasks)
-})
+  const { prisma } = require("./prismaClient");
+  // console.log("getting tasks")
+  // const time = new Date().getTime()
+  const tasks = await prisma.task.findMany({ take: 10 });
+  // console.log("time taken: ", new Date().getTime() - time)
+  res.json(tasks);
+});
 
-
-// app.listen(3000, () => {
-//   console.log("Server started on port 3000");
-// });
+app.use("/*", (req, res) => {
+  res.status(404).json({ error: "Route Not found" });
+});
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
+});
 
 module.exports = app;

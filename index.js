@@ -68,11 +68,10 @@ app.get("/task/:taskId", async (req, res) => {
 
 app.get("/tasks", async (req, res) => {
     const { prisma } = require("./parisma");
-    const tasks = await prisma.task.findMany({
-        include: {
-            author: true
-        }
-    })
+    // console.log("getting tasks")
+    // const time = new Date().getTime()
+    const tasks = await prisma.task.findMany({ take: 10 })
+    // console.log("time taken: ", new Date().getTime() - time)
     res.json(tasks)
 })
 

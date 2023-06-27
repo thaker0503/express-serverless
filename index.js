@@ -157,8 +157,14 @@ app.post("/signup", async (req, res) => {
 app.get("/openai", async (req, res) => {
   const { prisma } = require("./prismaClient");
   console.log("openai");
-  const data = await prisma.wedding_faq.findMany();
-  res.json(data);
+  return new Promise(async (resolve, reject) => {
+    try{
+      const data = await prisma.wedding_faq.findMany();
+      resolve(data);
+    } catch(err){
+      reject(err);
+    }
+  });
 });
 
 app.use("/*", (req, res) => {

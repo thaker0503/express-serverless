@@ -42,7 +42,7 @@ app.get("/tasks/:userId", async (req, res) => {
 app.post("/task", async (req, res) => {
   const { prisma } = require("./prismaClient");
   const { title, authorId } = req.body;
-  if (!title ) {
+  if (!title) {
     return res.status(400).json({ error: "Please provide title of the task" });
   } else if (!authorId) {
     return res.status(400).json({ error: "Please provide authorId" });
@@ -122,7 +122,7 @@ app.delete("/task/:taskId", async (req, res) => {
 app.post("/signup", async (req, res) => {
   const { prisma } = require("./prismaClient");
   const { name, email, password } = req.body;
-  if(!email) {
+  if (!email) {
     return res.status(400).json({ error: "Please provide email field." });
   }
   const oldUser = await prisma.user.findUnique({
@@ -132,9 +132,11 @@ app.post("/signup", async (req, res) => {
   });
   if (oldUser) {
     return res.status(400).json({ error: "User already exists" });
-  } 
+  }
   if (!name || !password) {
-    return res.status(400).json({ error: `Please provide ${!name ? 'name' : 'password'} filed.` });
+    return res
+      .status(400)
+      .json({ error: `Please provide ${!name ? "name" : "password"} filed.` });
   }
   await bcrypt.hash(password, 10, async (err, hash) => {
     if (err) {
@@ -150,6 +152,13 @@ app.post("/signup", async (req, res) => {
       res.json(newUser);
     }
   });
+});
+
+app.get("/openai", async (req, res) => {
+  const { prisma } = require("./prismaClient");
+  console.log("openai");
+  const data = await prisma.wedding_faq.findMany();
+  res.json(data);
 });
 
 app.use("/*", (req, res) => {
